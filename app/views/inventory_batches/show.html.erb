@@ -1,0 +1,26 @@
+<% content_for :title, "#{@batch.reference} | Aura Inventory" %>
+<h1>Batch <%= @batch.reference %></h1>
+<% if notice.present? %><p role="status"><%= notice %></p><% end %>
+<dl>
+  <dt>Movement</dt><dd><%= @batch.direction.upcase %></dd>
+  <dt>Saved at</dt><dd><%= @batch.created_at.strftime("%d %b %Y %H:%M %Z") %></dd>
+  <% if @batch.direction == "out" %>
+    <dt>Taken By</dt><dd><%= @batch.taken_by %></dd>
+    <dt>Client Code</dt><dd><%= @batch.client_code.presence || "—" %></dd>
+  <% end %>
+  <dt>Units</dt><dd><%= @movements.size %></dd>
+</dl>
+<table>
+  <thead><tr><th>Barcode</th><th>Item</th><th>Type</th><th>Variant</th><th>Scanned at</th></tr></thead>
+  <tbody>
+    <% @movements.each do |movement| %>
+      <% unit = movement.inventory_unit %>
+      <tr>
+        <td><%= unit.barcode %></td><td><%= unit.item.name %></td>
+        <td><%= unit.item.item_type %></td><td><%= unit.item.variant.presence || "—" %></td>
+        <td><%= movement.scanned_at.strftime("%d %b %Y %H:%M:%S %Z") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<p><%= link_to "Start another batch", @batch.direction == "in" ? inward_path : outward_path %> | <%= link_to "Dashboard", root_path %></p>

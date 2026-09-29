@@ -1,0 +1,38 @@
+<% content_for :title, "Dashboard | Aura Inventory" %>
+<h1>Dashboard</h1>
+<div class="inventory-summary">
+  <section><h2>Catalogue items</h2><p><%= @catalogue_count %></p></section>
+  <section><h2>Units IN</h2><p><%= @inside_count %></p></section>
+  <section><h2>Units OUT</h2><p><%= @outside_count %></p></section>
+</div>
+<p><%= link_to "Create Item", creation_path %> | <%= link_to "View Items", items_path %></p>
+<h2>Current inventory</h2>
+<% if @items.empty? %>
+  <p>No catalogue items yet. Create an item, then receive its physical units on Inward.</p>
+<% else %>
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Variant</th><th>Origin</th><th>Item condition</th><th>IN</th><th>OUT</th></tr></thead>
+    <tbody>
+      <% @items.each do |item| %>
+        <tr><td><%= link_to item.name, item %></td><td><%= item.item_type %></td><td><%= item.variant.presence || "—" %></td>
+          <td><%= item.origin.humanize %></td><td><%= item.status.humanize %></td>
+          <td><%= @stock.fetch([item.id, "in"], 0) %></td><td><%= @stock.fetch([item.id, "out"], 0) %></td></tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+<h2>Recent activity</h2>
+<% if @batches.empty? %>
+  <p>No stock movements yet.</p>
+<% else %>
+  <table>
+    <thead><tr><th>Batch</th><th>Movement</th><th>Units</th><th>Taken By</th><th>Client Code</th><th>Saved at</th></tr></thead>
+    <tbody>
+      <% @batches.each do |batch| %>
+        <tr><td><%= link_to batch.reference, inventory_batch_path(batch) %></td><td><%= batch.direction.upcase %></td>
+          <td><%= @batch_counts.fetch(batch.id, 0) %></td><td><%= batch.taken_by.presence || "—" %></td>
+          <td><%= batch.client_code.presence || "—" %></td><td><%= batch.created_at.strftime("%d %b %Y %H:%M %Z") %></td></tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

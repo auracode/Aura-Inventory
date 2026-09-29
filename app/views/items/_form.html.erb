@@ -1,0 +1,30 @@
+<%= form_with(model: item) do |form| %>
+  <% if item.errors.any? %>
+    <div role="alert">
+      <h2><%= pluralize(item.errors.count, "error") %> prevented this item from being saved:</h2>
+      <ul>
+        <% item.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <p><%= form.label :name, 'Name (required)' %><br><%= form.text_field :name, required: true %></p>
+  <p>
+    <%= form.label :item_type, "Item type (required)" %><br>
+    <%= form.text_field :item_type, required: true %>
+  </p>
+  <p>
+    <%= form.label :variant, "Variant (optional)" %><br>
+    <%= form.text_field :variant %>
+  </p>
+  <p>
+    <%= form.label :origin, "Origin (required)" %><br>
+    <%= form.select :origin, Item::ORIGINS.map { |value| [value.humanize, value] }, { prompt: "Select origin" }, required: true %>
+  </p>
+  <p>
+    <%= form.label :status, "Status (required)" %><br>
+    <%= form.select :status, Item::STATUSES.map { |value| [value.humanize, value] }, {}, required: true %>
+  </p>
+  <%= form.submit(item.persisted? ? "Save Changes" : "Create Item") %>
+<% end %>

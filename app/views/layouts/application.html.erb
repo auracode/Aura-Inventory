@@ -9,6 +9,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%= javascript_include_tag "inventory", defer: true %>
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
@@ -23,6 +24,16 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header>
+      <nav aria-label="Main navigation">
+        <%= link_to "Dashboard", root_path %> |
+        <%= link_to "Creation", creation_path %> |
+        <%= link_to "Inward", inward_path %> |
+        <%= link_to "Outward", outward_path %>
+      </nav>
+    </header>
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>

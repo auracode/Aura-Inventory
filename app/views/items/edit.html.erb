@@ -1,0 +1,5 @@
+<% content_for :title, "Edit Item | Aura Inventory" %>
+<h1>Edit Item</h1>
+<%= render "form", item: @item %>
+<p><%= link_to "View Item", @item %> |
+<%= link_to "Back to Items", items_path %></p>

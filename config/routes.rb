@@ -9,6 +9,14 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  root "pages#dashboard"
+  get "dashboard", to: "pages#dashboard"
+  get "creation", to: "items#new"
+  get "inward", to: "inventory_batches#inward"
+  get "outward", to: "inventory_batches#outward"
+  post "inward", to: "inventory_batches#create_inward"
+  post "outward", to: "inventory_batches#create_outward"
+  get "inventory/check", to: "inventory_batches#check", as: :check_inventory_batch
+  get "batches/:id", to: "inventory_batches#show", as: :inventory_batch
+  resources :items
 end

@@ -1,0 +1,12 @@
+one:
+  name: Sheet
+  item_type: Sheet
+  variant: Blue
+  origin: manufactured
+  status: new
+
+two:
+  name: Panel
+  item_type: Panel
+  origin: purchased
+  status: new

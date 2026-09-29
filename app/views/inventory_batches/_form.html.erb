@@ -1,0 +1,34 @@
+<% if @entry.errors.any? %>
+  <div role="alert">
+    <h2>Batch not saved</h2>
+    <ul><% @entry.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
+  </div>
+<% end %>
+<%= form_with scope: :batch, url: (@direction == "in" ? inward_path : outward_path), data: { inventory_batch: true, direction: @direction, check_url: check_inventory_batch_path } do |form| %>
+  <%= form.hidden_field :request_key, value: @entry.request_key %>
+  <%= form.hidden_field :scan_times_json, value: (@entry.scan_times || {}).to_json, data: { scan_times: true } %>
+  <% if @direction == "in" %>
+    <p>
+      <%= form.label :item_id, "Item (required)" %><br>
+      <%= form.select :item_id, @items.map { |item| ["#{item.name} — #{item.item_type} — #{item.variant.presence || 'No variant'} — #{item.origin.humanize}", item.id] }, { include_blank: "Select an item", selected: @entry.item_id }, required: true %>
+    </p>
+    <p>Each batch receives one catalogue item. Save this batch before switching items.</p>
+  <% else %>
+    <p><%= form.label :taken_by, "Taken By (required)" %><br><%= form.text_field :taken_by, value: @entry.taken_by, required: true %></p>
+    <p><%= form.label :client_code, "Client Code (optional)" %><br><%= form.text_field :client_code, value: @entry.client_code %></p>
+  <% end %>
+  <div data-scanner hidden>
+    <label for="barcode_scan">Scan barcode</label><br>
+    <input id="barcode_scan" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" data-scan-input>
+    <button type="button" data-add-scan>Add barcode</button>
+    <p data-scan-feedback role="status" aria-live="polite"></p>
+    <p>Scanned: <strong data-scan-count>0</strong></p>
+    <ul data-scan-list></ul>
+  </div>
+  <div data-manual-entry>
+    <%= form.label :barcodes_text, "Barcodes (one per line)" %><br>
+    <%= form.text_area :barcodes_text, value: @entry.barcodes_text, rows: 10, data: { barcode_lines: true } %>
+    <p>Review the list and remove accidental entries before saving.</p>
+  </div>
+  <p><%= form.submit(@direction == "in" ? "Save Inward Batch" : "Save Outward Batch", data: { save_batch: true }) %></p>
+<% end %>

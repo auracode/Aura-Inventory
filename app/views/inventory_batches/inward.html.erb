@@ -1,0 +1,8 @@
+<% content_for :title, "Inward | Aura Inventory" %>
+<h1>Inward</h1>
+<p>Select an item, scan each physical unit, then save the batch. Returning units keep their original barcode.</p>
+<% if @items.empty? %>
+  <p>Create an item before receiving stock. <%= link_to "Create Item", creation_path %></p>
+<% else %>
+  <%= render "form" %>
+<% end %>

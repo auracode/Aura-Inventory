@@ -1,0 +1,36 @@
+<% content_for :title, "Items | Aura Inventory" %>
+<h1>Items</h1>
+<% if notice.present? %>
+  <p role="status"><%= notice %></p>
+<% end %>
+<p><%= link_to "Add Item", new_item_path %></p>
+<% if @items.empty? %>
+  <p>No items yet. Add your first item to get started.</p>
+<% else %>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Name</th><th scope="col">Item type</th>
+        <th scope="col">Variant</th>
+        <th scope="col">Origin</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <td><%= item.name %></td><td><%= item.item_type %></td>
+          <td><%= item.variant.presence || "—" %></td>
+          <td><%= item.origin.humanize %></td>
+          <td><%= item.status.humanize %></td>
+          <td>
+            <%= link_to "View", item %>
+            <%= link_to "Edit", edit_item_path(item) %>
+            <%= button_to "Delete", item, method: :delete %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

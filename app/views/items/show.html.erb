@@ -1,0 +1,39 @@
+<% content_for :title, "#{@item.item_type} | Aura Inventory" %>
+<h1><%= @item.name %></h1>
+<% if notice.present? %>
+  <p role="status"><%= notice %></p>
+<% end %>
+<% if alert.present? %><p role="alert"><%= alert %></p><% end %>
+<dl>
+  <dt>Name</dt><dd><%= @item.name %></dd>
+  <dt>Item type</dt>
+  <dd><%= @item.item_type %></dd>
+  <dt>Variant</dt>
+  <dd><%= @item.variant.presence || "—" %></dd>
+  <dt>Origin</dt>
+  <dd><%= @item.origin.humanize %></dd>
+  <dt>Status</dt>
+  <dd><%= @item.status.humanize %></dd>
+</dl>
+<p><%= link_to "Edit Item", edit_item_path(@item) %> |
+<%= link_to "Back to Items", items_path %></p>
+<%= button_to "Delete Item", @item, method: :delete %>
+<h2>Physical units and movement history</h2>
+<% if @units.empty? %>
+  <p>No physical units received yet.</p>
+<% else %>
+  <% @units.each do |unit| %>
+    <details>
+      <summary><%= unit.barcode %> — currently <%= unit.state.upcase %></summary>
+      <ol>
+        <% unit.movements.sort_by { |movement| [movement.created_at, movement.id] }.each do |movement| %>
+          <li>
+            <%= movement.movement_batch.direction.upcase %> —
+            <%= link_to movement.movement_batch.reference, inventory_batch_path(movement.movement_batch) %> —
+            <%= movement.scanned_at.strftime("%d %b %Y %H:%M:%S %Z") %>
+          </li>
+        <% end %>
+      </ol>
+    </details>
+  <% end %>
+<% end %>
